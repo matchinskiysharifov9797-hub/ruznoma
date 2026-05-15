@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="tg" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Барномарезии Рӯз</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Nunito:wght@300;400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0f0f1a;
+    --card: #1a1a2e;
+    --card2: #16213e;
+    --accent: #e94560;
+    --accent2: #f5a623;
+    --text: #e8e8f0;
+    --muted: #7a7a9a;
+    --done: #2ecc71;
+    --border: rgba(255,255,255,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    min-height: 100vh;
+    padding: 0 0 80px;
+  }
+
+  /* Header */
+  .header {
+    background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    padding: 28px 20px 20px;
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    backdrop-filter: blur(10px);
+  }
+
+  .header-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+  }
+
+  .app-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .date-badge {
+    background: var(--accent);
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 20px;
+    letter-spacing: 0.5px;
+  }
+
+  .date-full {
+    font-size: 13px;
+    color: var(--muted);
+    font-weight: 300;
+  }
+
+  /* Stats */
+  .stats {
+    display: flex;
+    gap: 10px;
+    padding: 16px 20px;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .stats::-webkit-scrollbar { display: none; }
+
+  .stat-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px 18px;
+    min-width: 110px;
+    flex: 1;
+    text-align: center;
+    animation: fadeUp 0.4s ease both;
+  }
+  .stat-card:nth-child(2) { animation-delay: 0.1s; }
+  .stat-card:nth-child(3) { animation-delay: 0.2s; }
+
+  .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .stat-num.red { color: var(--accent); }
+  .stat-num.green { color: var(--done); }
+  .stat-num.yellow { color: var(--accent2); }
+
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* Progress */
+  .progress-section {
+    padding: 0 20px 16px;
+  }
+
+  .progress-bar-bg {
+    background: var(--border);
+    border-radius: 10px;
+    height: 6px;
+    overflow: hidden;
+  }
+
+  .progress-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    border-radius: 10px;
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .progress-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 6px;
+  }
+
+  /* Add Task */
+  .add-section {
+    padding: 0 20px 16px;
+  }
+
+  .add-box {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 14px;
+  }
+
+  .add-row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+  }
+
+  .input-field {
+    flex: 1;
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px 14px;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+  .input-field:focus { border-color: var(--accent); }
+  .input-field::placeholder { color: var(--muted); }
+
+  .add-options {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .time-input {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    outline: none;
+    width: 110px;
+    transition: border-color 0.2s;
+  }
+  .time-input:focus { border-color: var(--accent); }
+
+  .priority-select {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 8px 12px;
+    color: var(--text);
+    font-family: 'Nunito', sans-serif;
+    font-size: 13px;
+    outline: none;
+    flex: 1;
+    appearance: none;
+    cursor: pointer;
+  }
+  .priority-select option { background: #1a1a2e; }
+
+  .btn-add {
+    background: linear-gradient(135deg, var(--accent), #c0392b);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 10px 20px;
+    font-family: 'Nunito', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: transform 0.15s, opacity 0.15s;
+    white-space: nowrap;
+  }
+  .btn-add:active { transform: scale(0.95); opacity: 0.9; }
+
+  /* Tasks List */
+  .tasks-section {
+    padding: 0 20px;
+  }
+
+  .section-title {
+    font-size: 12px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--muted);
+    margin-bottom: 12px;
+  }
+
+  .task-item {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    animation: fadeUp 0.3s ease both;
+    transition: opacity 0.3s, transform 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .task-item::before {
+    content: '';
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 3px;
+    border-radius: 3px 0 0 3px;
+  }
+  .task-item.high::before { background: var(--accent); }
+  .task-item.medium::before { background: var(--accent2); }
+  .task-item.low::before { background: var(--done); }
+
+  .task-item.done {
+    opacity: 0.5;
+  }
+
+  .checkbox {
+    width: 22px;
+    height: 22px;
+    border: 2px solid var(--border);
+    border-radius: 50%;
+    cursor: pointer;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+    margin-top: 1px;
+  }
+  .checkbox.checked {
+    background: var(--done);
+    border-color: var(--done);
+  }
+  .checkbox.checked::after {
+    content: '✓';
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+  }
+
+  .task-body { flex: 1; min-width: 0; }
+
+  .task-title {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+    transition: text-decoration 0.2s;
+  }
+  .done .task-title { text-decoration: line-through; color: var(--muted); }
+
+  .task-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .task-time {
+    font-size: 12px;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 3px;
+  }
+
+  .priority-badge {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .priority-badge.high { background: rgba(233,69,96,0.2); color: var(--accent); }
+  .priority-badge.medium { background: rgba(245,166,35,0.2); color: var(--accent2); }
+  .priority-badge.low { background: rgba(46,204,113,0.2); color: var(--done); }
+
+  .btn-delete {
+    background: transparent;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    font-size: 16px;
+    padding: 4px;
+    border-radius: 6px;
+    transition: color 0.2s;
+    line-height: 1;
+  }
+  .btn-delete:hover { color: var(--accent); }
+
+  /* Empty state */
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--muted);
+  }
+  .empty-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-text { font-size: 15px; }
+
+  /* Divider */
+  .divider {
+    border: none;
+    border-top: 1px solid var(--border);
+    margin: 16px 20px;
+  }
+
+  /* Animations */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--done);
+    color: white;
+    padding: 10px 22px;
+    border-radius: 30px;
+    font-size: 13px;
+    font-weight: 700;
+    transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    z-index: 999;
+    white-space: nowrap;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div class="header-top">
+    <div class="app-title">📅 Рӯзнома</div>
+    <div class="date-badge" id="dayName"></div>
+  </div>
+  <div class="date-full" id="dateDisplay"></div>
+</div>
+
+<div class="stats">
+  <div class="stat-card">
+    <div class="stat-num red" id="statTotal">0</div>
+    <div class="stat-label">Ҳама</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num green" id="statDone">0</div>
+    <div class="stat-label">Иҷро</div>
+  </div>
+  <div class="stat-card">
+    <div class="stat-num yellow" id="statLeft">0</div>
+    <div class="stat-label">Боқӣ</div>
+  </div>
+</div>
+
+<div class="progress-section">
+  <div class="progress-label">
+    <span>Пешрафт</span>
+    <span id="progressPct">0%</span>
+  </div>
+  <div class="progress-bar-bg">
+    <div class="progress-bar-fill" id="progressBar" style="width:0%"></div>
+  </div>
+</div>
+
+<div class="add-section">
+  <div class="add-box">
+    <div class="add-row">
+      <input type="text" class="input-field" id="taskInput" placeholder="Вазифаи нав илова кунед..." maxlength="80">
+      <button class="btn-add" onclick="addTask()">+ Илова</button>
+    </div>
+    <div class="add-options">
+      <input type="time" class="time-input" id="timeInput">
+      <select class="priority-select" id="priorityInput">
+        <option value="high">🔴 Муҳим</option>
+        <option value="medium" selected>🟡 Миёна</option>
+        <option value="low">🟢 Оддӣ</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<div class="tasks-section">
+  <div class="section-title">Вазифаҳои имрӯз</div>
+  <div id="taskList"></div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+  let tasks = JSON.parse(localStorage.getItem('ruzTasks') || '[]');
+
+  const DAYS_TG = ['Якшанбе','Душанбе','Сешанбе','Чоршанбе','Панҷшанбе','Ҷумъа','Шанбе'];
+  const MONTHS_TG = ['Январ','Феврал','Март','Апрел','Май','Июн','Июл','Август','Сентябр','Октябр','Ноябр','Декабр'];
+
+  function initDate() {
+    const now = new Date();
+    document.getElementById('dayName').textContent = DAYS_TG[now.getDay()];
+    document.getElementById('dateDisplay').textContent =
+      `${now.getDate()} ${MONTHS_TG[now.getMonth()]} ${now.getFullYear()}`;
+
+    // Default time = current
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    document.getElementById('timeInput').value = `${h}:${m}`;
+  }
+
+  function save() {
+    localStorage.setItem('ruzTasks', JSON.stringify(tasks));
+  }
+
+  function addTask() {
+    const input = document.getElementById('taskInput');
+    const timeInput = document.getElementById('timeInput');
+    const priority = document.getElementById('priorityInput').value;
+    const title = input.value.trim();
+    if (!title) { input.focus(); return; }
+
+    tasks.unshift({
+      id: Date.now(),
+      title,
+      time: timeInput.value,
+      priority,
+      done: false
+    });
+
+    input.value = '';
+    save();
+    render();
+    showToast('Вазифа илова шуд ✓');
+  }
+
+  function toggleTask(id) {
+    const t = tasks.find(t => t.id === id);
+    if (t) { t.done = !t.done; save(); render(); }
+  }
+
+  function deleteTask(id) {
+    tasks = tasks.filter(t => t.id !== id);
+    save();
+    render();
+    showToast('Вазифа ҳазф шуд');
+  }
+
+  function render() {
+    const list = document.getElementById('taskList');
+    const total = tasks.length;
+    const done = tasks.filter(t => t.done).length;
+    const left = total - done;
+    const pct = total ? Math.round((done / total) * 100) : 0;
+
+    document.getElementById('statTotal').textContent = total;
+    document.getElementById('statDone').textContent = done;
+    document.getElementById('statLeft').textContent = left;
+    document.getElementById('progressPct').textContent = pct + '%';
+    document.getElementById('progressBar').style.width = pct + '%';
+
+    if (tasks.length === 0) {
+      list.innerHTML = `<div class="empty-state">
+        <div class="empty-icon">🌙</div>
+        <div class="empty-text">Ҳоло вазифае нест.<br>Вазифаи нав илова кунед!</div>
+      </div>`;
+      return;
+    }
+
+    const priorityOrder = { high: 0, medium: 1, low: 2 };
+    const sorted = [...tasks].sort((a, b) => {
+      if (a.done !== b.done) return a.done ? 1 : -1;
+      return priorityOrder[a.priority] - priorityOrder[b.priority];
+    });
+
+    const priorityLabel = { high: 'Муҳим', medium: 'Миёна', low: 'Оддӣ' };
+
+    list.innerHTML = sorted.map(t => `
+      <div class="task-item ${t.priority} ${t.done ? 'done' : ''}" id="task-${t.id}">
+        <div class="checkbox ${t.done ? 'checked' : ''}" onclick="toggleTask(${t.id})"></div>
+        <div class="task-body">
+          <div class="task-title">${escHtml(t.title)}</div>
+          <div class="task-meta">
+            ${t.time ? `<div class="task-time">🕐 ${t.time}</div>` : ''}
+            <div class="priority-badge ${t.priority}">${priorityLabel[t.priority]}</div>
+          </div>
+        </div>
+        <button class="btn-delete" onclick="deleteTask(${t.id})">✕</button>
+      </div>
+    `).join('');
+  }
+
+  function escHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+
+  function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2000);
+  }
+
+  document.getElementById('taskInput').addEventListener('keydown', e => {
+    if (e.key === 'Enter') addTask();
+  });
+
+  initDate();
+  render();
+</script>
+</body>
+</html>
